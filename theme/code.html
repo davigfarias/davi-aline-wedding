@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html lang="pt"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Evelyn &amp; James - Casamento</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#1e1c10",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#544200",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-variant": "#e1e3e0",
+                        "surface-container-highest": "#e1e3e0",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#e9c349",
+                        "background": "#f8faf6",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#666353",
+                        "surface-container-low": "#f2f4f1",
+                        "primary": "#006d36",
+                        "tertiary-container": "#d3ae36",
+                        "primary-fixed": "#83fba5",
+                        "inverse-primary": "#66dd8b",
+                        "tertiary": "#735c00",
+                        "surface": "#f8faf6",
+                        "primary-fixed-dim": "#66dd8b",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "inverse-surface": "#2e312f",
+                        "on-primary-fixed": "#00210c",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#edeeeb",
+                        "primary-container": "#50c878",
+                        "inverse-on-surface": "#f0f1ee",
+                        "outline": "#6e7a6e",
+                        "on-primary-container": "#005025",
+                        "tertiary-fixed": "#ffe088",
+                        "outline-variant": "#bdcabc",
+                        "on-secondary-fixed-variant": "#4a4738",
+                        "on-surface": "#191c1a",
+                        "on-background": "#191c1a",
+                        "on-surface-variant": "#3e4a3f",
+                        "secondary": "#625f4f",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f8faf6",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#e5e0cc",
+                        "secondary-fixed-dim": "#ccc6b3",
+                        "secondary-fixed": "#e8e2cf",
+                        "surface-dim": "#d9dad7",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#006d36",
+                        "on-primary-fixed-variant": "#005227",
+                        "surface-container-high": "#e7e9e5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "32px",
+                        "section-gap": "120px",
+                        "unit": "8px",
+                        "container-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-md": ["DM Sans"],
+                        "display-lg": ["Playfair Display"],
+                        "body-lg": ["DM Sans"],
+                        "headline-md": ["Playfair Display"],
+                        "label-caps": ["DM Sans"],
+                        "headline-sm": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.15em", "fontWeight": "700" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .gold-divider {
+            height: 1px;
+            background-color: #D4AF37; /* Keeping Gold reference, though tertiary-container could be used */
+            width: 80px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30">
+<div class="max-w-7xl mx-auto px-container-padding flex justify-between items-center h-20">
+<a class="font-display-lg text-headline-sm text-primary" href="#">Evelyn &amp; James</a>
+<div class="hidden md:flex gap-gutter items-center">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300 font-label-caps text-label-caps uppercase tracking-widest hover:text-tertiary-container transition-all cursor-pointer active:opacity-70" href="#event">Event</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300 font-label-caps text-label-caps uppercase tracking-widest hover:text-tertiary-container transition-all cursor-pointer active:opacity-70" href="#location">Location</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300 font-label-caps text-label-caps uppercase tracking-widest hover:text-tertiary-container transition-all cursor-pointer active:opacity-70" href="#registry">Gifts</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300 font-label-caps text-label-caps uppercase tracking-widest hover:text-tertiary-container transition-all cursor-pointer active:opacity-70" href="#gallery">Gallery</a>
+</div>
+<button class="bg-primary text-on-primary font-label-caps text-label-caps uppercase px-6 py-3 rounded hover:bg-primary-container hover:text-on-primary-container transition-colors">RSVP</button>
+</div>
+</nav>
+<main class="flex-grow pt-20">
+<!-- Hero Section -->
+<section class="relative h-[819px] flex items-center justify-center text-center">
+<div class="absolute inset-0 z-0">
+<div class="bg-cover bg-center w-full h-full opacity-60" data-alt="A beautiful, romantic engagement photo of a stylish couple in a lush, green classical garden. Soft, golden hour lighting filters through the trees, highlighting the serene and elegant atmosphere. The overall mood is sophisticated, timeless, and perfectly aligned with a luxury wedding aesthetic, utilizing emerald green and warm gold tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBMHeuUPjUVOHFgiqo6r3I_oCXH4b22eHqNg5LFu7DhDHolMMYFELhfa-9tlhY54EnuKyqb9VJrX04aHbh7v3NMOjk-pDmo3Byyjbldj6lOoHHwVHMs523-76yzbafF6twBMoRzYpoIJOwkP4IZiTe_dV0xPeKV9RKc-6xomOTkpr1Rh0gZT_eRSakdU3RjvHIJ4Vg8m4K4dUVr9gMKyEeZTI6vEcmwjKRZBj9gKkCsi9M-ioMCY2D4')"></div>
+<div class="absolute inset-0 bg-background/40"></div>
+</div>
+<div class="relative z-10 max-w-4xl px-container-padding mx-auto flex flex-col items-center gap-unit">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-4">Evelyn &amp; James</h1>
+<div class="gold-divider mb-6"></div>
+<p class="font-headline-md text-headline-md text-on-surface-variant">Salvem a Data</p>
+<p class="font-body-lg text-body-lg text-on-surface mt-2 tracking-widest uppercase">24 de Agosto de 2024</p>
+</div>
+</section>
+<!-- Our Story -->
+<section class="py-section-gap px-container-padding max-w-7xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter items-center">
+<div class="order-2 md:order-1 text-center md:text-left flex flex-col gap-unit">
+<h2 class="font-headline-md text-headline-md text-primary mb-4">Nossa História</h2>
+<div class="gold-divider md:ml-0 mb-6"></div>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-4">
+                        Desde o nosso primeiro encontro sob as luzes da cidade até as tardes tranquilas partilhando sonhos, a nossa jornada tem sido uma tapeçaria de momentos inesquecíveis. Estamos entusiasmados por começar este novo capítulo e não podíamos imaginar celebrá-lo sem as pessoas que mais amamos.
+                    </p>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                        O amor é paciente, o amor é bondoso. Junte-se a nós para celebrar a nossa união e a promessa de um futuro brilhante juntos.
+                    </p>
+</div>
+<div class="order-1 md:order-2">
+<img alt="Our Story" class="w-full h-[500px] object-cover rounded-xl border border-surface-dim shadow-sm" data-alt="A sophisticated black and white portrait of an elegant couple laughing together in a classic architectural setting. The lighting is soft and natural, casting gentle shadows that emphasize their joy and connection. The style is editorial and timeless, fitting a high-end luxury wedding narrative." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHe2C3ezSKMNVtNSDF8Y688UwijkoMND0L8zyD_oJTgjlMGD83mYAJ3hWnB5IOGpgSFY7cT_0Y7ssigF84rL1sTSCYciSEY2QbA6r5g09EAM7p91mDx9OtCzffcy_G3_K8ZcOFM2Aju2h0cnKBq5daCUozI5-52_uNlHxY0Laoqoet3SU6nx-GdbpgPqShOb9f7horXECoieISOh5J3PJsBlKvhf_yT1Ncb3Pj29MB7pHKmTxtYqTS"/>
+</div>
+</div>
+</section>
+<!-- The Event -->
+<section class="py-section-gap bg-surface-container-low" id="event">
+<div class="max-w-7xl mx-auto px-container-padding text-center">
+<h2 class="font-headline-md text-headline-md text-primary mb-4">O Evento</h2>
+<div class="gold-divider mb-12"></div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Ceremony Card -->
+<div class="bg-surface border border-surface-dim rounded-xl p-8 flex flex-col items-center shadow-sm">
+<span class="material-symbols-outlined text-tertiary-container text-4xl mb-4" style="font-variation-settings: 'FILL' 0;">church</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Cerimônia</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-4">Church of the Holy Spirit</p>
+<p class="font-label-caps text-label-caps text-primary tracking-widest uppercase border-t border-outline-variant/30 pt-4 w-full">16:00 - Sábado, 24 Ago</p>
+</div>
+<!-- Reception Card -->
+<div class="bg-surface border border-surface-dim rounded-xl p-8 flex flex-col items-center shadow-sm">
+<span class="material-symbols-outlined text-tertiary-container text-4xl mb-4" style="font-variation-settings: 'FILL' 0;">celebration</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Recepção</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-4">Grand Emerald Ballroom</p>
+<p class="font-label-caps text-label-caps text-primary tracking-widest uppercase border-t border-outline-variant/30 pt-4 w-full">18:00 - Sábado, 24 Ago</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Location -->
+<section class="py-section-gap px-container-padding max-w-7xl mx-auto" id="location">
+<div class="text-center mb-12">
+<h2 class="font-headline-md text-headline-md text-primary mb-4">Localização</h2>
+<div class="gold-divider mb-6"></div>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Ambos os eventos decorrerão no coração da cidade, proporcionando um cenário clássico e elegante para a nossa celebração.</p>
+</div>
+<div class="relative w-full h-[400px] bg-surface-variant rounded-xl overflow-hidden border border-surface-dim">
+<img class="w-full h-full object-cover" data-alt="A stylized, elegant, high-end digital map illustration focusing on a classical city center. The map uses a desaturated cream and pearl white color palette, accented with subtle emerald green pins and delicate gold lines for main roads. The aesthetic is sophisticated, minimal, and tailored for a luxury wedding invitation." data-location="City Center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3d_Um-wxD5woxCoP4-I9j_f2CfD3YG3G50jgQHza-ItxxZEAXYndI4JhrajRTOZclR78E2VqS37xkB4d3sjiPepO0D_ZmxP6NNrl7L8sJUHDQJPglV8MbzTRffOzpqNoVf-6YtqB-rd33QbmKLBPMr0h368LxghPZh-CtDyYu-NvDNjzg-I0jCnxO87XyrHGzS2UqwXdVeLAjQVVOcgmu6LqgZX86REBNlPKrAXCNKQnfouVJydmI"/>
+</div>
+</section>
+<!-- Wedding Registry -->
+<section class="py-section-gap bg-primary/5 border-y border-primary/10" id="registry">
+<div class="max-w-4xl mx-auto px-container-padding text-center flex flex-col items-center">
+<span class="material-symbols-outlined text-primary text-5xl mb-6" style="font-variation-settings: 'FILL' 0;">redeem</span>
+<h2 class="font-headline-md text-headline-md text-primary mb-4">Lista de Presentes</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8 max-w-xl mx-auto">
+                    A vossa presença é o maior presente que poderíamos desejar. Contudo, para aqueles que desejarem honrar-nos com uma lembrança, criamos uma lista para nos ajudar a construir a nossa nova vida juntos.
+                </p>
+<button class="bg-primary text-on-primary font-label-caps text-label-caps uppercase tracking-widest px-8 py-4 rounded hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">Ver Lista de Presentes</button>
+</div>
+</section>
+<!-- Gallery -->
+<section class="py-section-gap px-container-padding max-w-7xl mx-auto" id="gallery">
+<div class="text-center mb-12">
+<h2 class="font-headline-md text-headline-md text-primary mb-4">Galeria</h2>
+<div class="gold-divider"></div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="md:col-span-2 md:row-span-2 h-[400px] md:h-auto">
+<img class="w-full h-full object-cover rounded-lg border border-surface-dim" data-alt="A romantic, candid photo of the couple walking hand-in-hand through an elegant, historic estate garden. The lighting is warm and sun-drenched, emphasizing the deep emerald greens of the foliage and the soft ivory of their attire. The mood is intimate, luxurious, and timelessly classical." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh-EpHJZ2L6ska0hWr2UtEBVT-L2P0u4IUNM1Muli1cu9MtSzuiffwwmS7lBCYLJF8UtTBRfyQypV9HGN1Guh3BV2u1i1SRPVrbHqWWX_gHPFtAlysbhshxFSYp6LshnvTnN346X84wGM8ugnjVfbNtaJRPPWqVQaHlDELOBX6-GaI5ukmyrldF4vyibyrBtV6x0xV3V3INKvYlLFoiNHmv7pKjGJ2MVzHYSZt08LIG0d-CA9LXop_"/>
+</div>
+<div class="h-[200px]">
+<img class="w-full h-full object-cover rounded-lg border border-surface-dim" data-alt="A close-up shot of the couple's intertwined hands, highlighting an elegant engagement ring. The background is a soft, out-of-focus blend of warm gold and cream tones. The style is fine-art photography, intimate and detailed, fitting a sophisticated wedding aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfj-ilfLTQxpvxHL1lZswRB1EwsEg2xAiyrua1EJwJ5PkU5e8nJ5yRDslO4NIW-ynSLKvDrjbo2liWhwihJtnaf5tbpCSsKwCNPW48lA_4ms2G3_0nP8TQp7v3efZx6075iJVycJGbas6Ygz5Pqy3Edo5ZNUp_raLctM-Vu1DiqdJ1N8PK-W2xVXyS3qCIwBL3llknkekYezCeiX9DdM4UGFqo2ggbAlBW2F2FEP_BGvqoprHO0ERG"/>
+</div>
+<div class="h-[200px]">
+<img class="w-full h-full object-cover rounded-lg border border-surface-dim" data-alt="A black and white candid shot of the couple sharing a laugh over coffee in a classical, Parisian-style cafe. The contrast is rich, adding depth and emotion to the scene. The mood is relaxed yet deeply romantic and elegant." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLWGQlegaU96SUz46SlHobmzQzeUV1TBVDeiD5J0mNOmvAChLQDf_KTSgYk-_OE91lWP71IhP5MWEXtV-bP-vtD5E-UJ7zpmeogYtt2H1lCwfADicnCJ9ViJehzuHuGfBBRooH4PwntB4AJZlJYYjWYOr9x4PT24QtDp6Tp8eFmn7-BzVB2f05xA3IhVKsXniWa5g-LgE1OxpMcqfju177H4ZG0hYDIQBp-SHz7UQKDNh1HsjXkUJu"/>
+</div>
+<div class="h-[200px]">
+<img class="w-full h-full object-cover rounded-lg border border-surface-dim" data-alt="A beautifully styled flat lay of wedding invitation details, featuring pearl white cardstock, elegant gold foil typography, and subtle emerald green botanical accents. The lighting is soft and diffused, conveying luxury, anticipation, and classic elegance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATIQ17SgcNc-b5m2h0qNm5VWM5IoCrAgI0laR64W9w4BK5_qAEGdRZuj5d4yQ468uhbn4DGk6fwbDwQb07--VsYMGtL4x1-S-iu-z0vjtdvKNO7u3hapnqKKl3MsX1Nv-_qZYZHtpYRBOtQy8XCf9fcnyFs0XGxjPC798CddPfLbJExnT_i4Bg7RMPtxpDDVZ8wi6LnNEGZut-F9CF-f35MuVYUb5INmUlH2kL6ZSDh3Mf_xvBMheo"/>
+</div>
+<div class="h-[200px]">
+<img class="w-full h-full object-cover rounded-lg border border-surface-dim" data-alt="A serene portrait of the couple looking out over a grand, classical landscape at sunset. The sky is painted in soft pastel hues, while the foreground remains slightly shadowed in deep greens. The overall aesthetic is poetic, grand, and enduring." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaQOf6GQWtAU5vrJxPuJbtQdwZOx2-lPXr_mcQRoAloXwT8tQw61HhZw-pdliqfuQ0KwbOXesrc7M0aGejOwhuDAZy0zesCQbXd5nugsJlFIeY7kCY7kel_RTphVH4IcwD_kFzSuICPDOlPOrXPVUTe88maUg_DSB4okgfxzCsOehuMJwSIuYik4kpP9nSmsTmUAIu44UHeUBpi7p3RymI6_01gmue54OxysvvNX8_N80bnVChas1U"/>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low w-full py-section-gap border-t border-tertiary-container/20 mt-auto">
+<div class="flex flex-col items-center gap-unit max-w-7xl mx-auto px-container-padding text-center">
+<p class="font-display-lg text-headline-md text-primary mb-4">Evelyn &amp; James</p>
+<div class="flex gap-4 mb-6">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Privacy Policy</a>
+<span class="text-on-surface-variant/50">•</span>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Contact Us</a>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant/70">With love, Evelyn &amp; James © 2024</p>
+</div>
+</footer>
+</body></html>
