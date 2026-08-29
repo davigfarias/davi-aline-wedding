@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        if (Family::query()->exists()) {
+        if (app()->isProduction() || Family::query()->exists()) {
             return;
         }
 
