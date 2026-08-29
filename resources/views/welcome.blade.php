@@ -2,6 +2,31 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
+
+        {{-- Preview ao compartilhar o link (WhatsApp, Instagram, etc.) --}}
+        @php
+            $shareTitle = config('app.name').' — 20 de março de 2027';
+            $shareDesc = 'Confirme sua presença no casamento de '.config('app.name').'. Cerimônia em Taguatinga e recepção no Lago Sul — Brasília, DF.';
+            // troca por uma imagem 1200x630 dedicada se quiser; por ora usa uma das fotos
+            $shareImage = asset('img/2.jpeg');
+        @endphp
+        <meta name="description" content="{{ $shareDesc }}">
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="{{ config('app.name') }}">
+        <meta property="og:locale" content="pt_BR">
+        <meta property="og:title" content="{{ $shareTitle }}">
+        <meta property="og:description" content="{{ $shareDesc }}">
+        <meta property="og:url" content="{{ url('/') }}">
+        <meta property="og:image" content="{{ $shareImage }}">
+        <meta property="og:image:secure_url" content="{{ $shareImage }}">
+        <meta property="og:image:type" content="image/jpeg">
+        <meta property="og:image:width" content="1280">
+        <meta property="og:image:height" content="853">
+        <meta property="og:image:alt" content="{{ config('app.name') }}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ $shareTitle }}">
+        <meta name="twitter:description" content="{{ $shareDesc }}">
+        <meta name="twitter:image" content="{{ $shareImage }}">
     </head>
     <body class="min-h-screen bg-background font-body text-on-background antialiased">
         {{-- ================= NAV ================= --}}
