@@ -223,7 +223,7 @@
                     </p>
                     {{-- TODO: colocar o link da lista de presentes no href --}}
                     <a
-                        href="#"
+                        href="https://lista.havan.com.br/Convidado/ItensListaPresente/957800"
                         target="_blank"
                         rel="noopener"
                         class="mt-8 rounded bg-primary px-8 py-3.5 text-xs font-medium uppercase tracking-widest text-on-primary shadow-sm transition-colors hover:bg-primary-container hover:text-white"
