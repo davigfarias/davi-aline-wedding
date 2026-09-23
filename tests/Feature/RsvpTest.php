@@ -9,7 +9,7 @@ beforeEach(function () {
     config()->set('wedding.contact', '(11) 90000-0000');
 });
 
-test('a search matching one family goes straight to confirmation', function () {
+test('a search matching one guest goes straight to confirmation and shows only that guest', function () {
     $family = Family::factory()->create(['label' => 'Família Silva']);
     Guest::factory()->for($family)->create(['name' => 'João Silva']);
     Guest::factory()->for($family)->create(['name' => 'Maria Silva']);
@@ -18,8 +18,8 @@ test('a search matching one family goes straight to confirmation', function () {
         ->set('query', 'joão silva')
         ->call('search')
         ->assertSet('step', 'confirm')
-        ->assertSet('familyId', $family->id)
-        ->assertSee('Maria Silva');
+        ->assertSee('João Silva')
+        ->assertDontSee('Maria Silva');
 });
 
 test('the search ignores accents and case', function () {
@@ -32,7 +32,7 @@ test('the search ignores accents and case', function () {
         ->assertSet('step', 'confirm');
 });
 
-test('a partial name match still finds the family', function () {
+test('a partial name match still finds the guest', function () {
     $family = Family::factory()->create();
     Guest::factory()->for($family)->create(['name' => 'Anderson Farias']);
 
@@ -42,33 +42,15 @@ test('a partial name match still finds the family', function () {
         ->assertSet('step', 'confirm');
 });
 
-test('multiple matching families lead to a choice step', function () {
-    $a = Family::factory()->create(['label' => 'Família A']);
-    $b = Family::factory()->create(['label' => 'Família B']);
-    Guest::factory()->for($a)->create(['name' => 'João Alves']);
-    Guest::factory()->for($b)->create(['name' => 'João Brito']);
-
-    $component = Livewire::test('rsvp')
-        ->set('query', 'joão')
-        ->call('search')
-        ->assertSet('step', 'choose')
-        ->assertSee('Família A')
-        ->assertSee('Família B');
-
-    $component->call('choose', $a->id)
-        ->assertSet('step', 'confirm')
-        ->assertSet('familyId', $a->id);
-});
-
-test('the choice step only shows the matching guest, not the whole family', function () {
+test('multiple guests matching the name lead to a choice step without exposing other family members', function () {
     $a = Family::factory()->create(['label' => 'Família Silva']);
     $b = Family::factory()->create(['label' => 'Família Souza']);
-    Guest::factory()->for($a)->create(['name' => 'Marcelo Silva']);
+    $marceloA = Guest::factory()->for($a)->create(['name' => 'Marcelo Silva']);
     Guest::factory()->for($a)->create(['name' => 'Ana Silva']);
     Guest::factory()->for($b)->create(['name' => 'Marcelo Souza']);
     Guest::factory()->for($b)->create(['name' => 'Bruno Souza']);
 
-    Livewire::test('rsvp')
+    $component = Livewire::test('rsvp')
         ->set('query', 'marcelo')
         ->call('search')
         ->assertSet('step', 'choose')
@@ -76,18 +58,24 @@ test('the choice step only shows the matching guest, not the whole family', func
         ->assertSee('Marcelo Souza')
         ->assertDontSee('Ana Silva')
         ->assertDontSee('Bruno Souza');
+
+    $component->call('choose', $marceloA->id)
+        ->assertSet('step', 'confirm')
+        ->assertSet('guestId', $marceloA->id)
+        ->assertSee('Marcelo Silva')
+        ->assertDontSee('Ana Silva');
 });
 
-test('a family cannot be chosen unless it was in the search results', function () {
+test('a guest cannot be chosen unless it was in the search results', function () {
     $shown = Family::factory()->create();
     $hidden = Family::factory()->create();
     Guest::factory()->for($shown)->create(['name' => 'Carlos Dias']);
-    Guest::factory()->for($hidden)->create(['name' => 'Outra Pessoa']);
+    $hiddenGuest = Guest::factory()->for($hidden)->create(['name' => 'Outra Pessoa']);
 
     Livewire::test('rsvp')
         ->set('query', 'carlos')
         ->call('search')
-        ->call('choose', $hidden->id)
+        ->call('choose', $hiddenGuest->id)
         ->assertStatus(403);
 });
 
@@ -99,27 +87,26 @@ test('an unknown name shows the not-found step with the contact', function () {
         ->assertSee('(11) 90000-0000');
 });
 
-test('submitting records attendance, timestamp and message for the whole family', function () {
+test('submitting records attendance and timestamp only for the searched guest', function () {
     $family = Family::factory()->create();
     $going = Guest::factory()->for($family)->create(['name' => 'Rita Nunes']);
-    $notGoing = Guest::factory()->for($family)->create(['name' => 'Paulo Nunes']);
+    $sibling = Guest::factory()->for($family)->create(['name' => 'Paulo Nunes']);
 
     Livewire::test('rsvp')
-        ->set('query', 'nunes')
+        ->set('query', 'rita nunes')
         ->call('search')
-        ->set("attendance.{$going->id}", true)
-        ->set("attendance.{$notGoing->id}", false)
+        ->set('isAttending', true)
         ->set('familyMessage', 'Mal podemos esperar!')
         ->call('submit')
         ->assertSet('step', 'done');
 
     expect($going->fresh())->is_attending->toBeTrue()
         ->responded_at->not->toBeNull();
-    expect($notGoing->fresh()->is_attending)->toBeFalse();
+    expect($sibling->fresh()->responded_at)->toBeNull();
     expect($family->fresh()->message)->toBe('Mal podemos esperar!');
 });
 
-test('re-opening a responded family prefills the previous answers', function () {
+test('re-opening a responded guest prefills the previous answer', function () {
     $family = Family::factory()->create(['message' => 'Recado antigo']);
     $guest = Guest::factory()->for($family)->attending()->create(['name' => 'Sofia Lima']);
 
@@ -127,7 +114,7 @@ test('re-opening a responded family prefills the previous answers', function () 
         ->set('query', 'sofia')
         ->call('search')
         ->assertSet('step', 'confirm')
-        ->assertSet("attendance.{$guest->id}", true)
+        ->assertSet('isAttending', true)
         ->assertSet('familyMessage', 'Recado antigo');
 });
 
@@ -155,6 +142,6 @@ test('startOver clears the flow', function () {
         ->call('search')
         ->call('startOver')
         ->assertSet('step', 'search')
-        ->assertSet('familyId', null)
+        ->assertSet('guestId', null)
         ->assertSet('query', '');
 });

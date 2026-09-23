@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Family;
 use App\Models\Guest;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Computed;
@@ -18,13 +17,12 @@ new class extends Component
 
     /** @var array<int> */
     #[Locked]
-    public array $foundFamilyIds = [];
+    public array $foundGuestIds = [];
 
     #[Locked]
-    public ?int $familyId = null;
+    public ?int $guestId = null;
 
-    /** @var array<int, bool> */
-    public array $attendance = [];
+    public bool $isAttending = false;
 
     #[Validate('nullable|string|max:1000')]
     public string $familyMessage = '';
@@ -38,24 +36,22 @@ new class extends Component
     }
 
     #[Computed]
-    public function family(): ?Family
+    public function guest(): ?Guest
     {
-        return $this->familyId
-            ? Family::with('guests')->find($this->familyId)
+        return $this->guestId
+            ? Guest::with('family')->find($this->guestId)
             : null;
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, Family>
+     * @return \Illuminate\Support\Collection<int, Guest>
      */
     #[Computed]
     public function matches(): \Illuminate\Support\Collection
     {
-        $term = Guest::normalize($this->query);
-
-        return Family::whereIn('id', $this->foundFamilyIds)
-            ->with(['guests' => fn ($q) => $q->where('name_normalized', 'like', '%'.$term.'%')])
-            ->orderBy('label')
+        return Guest::whereIn('id', $this->foundGuestIds)
+            ->with('family')
+            ->orderBy('name')
             ->get();
     }
 
@@ -65,21 +61,20 @@ new class extends Component
 
         $term = Guest::normalize($this->query);
 
-        $families = Family::whereHas('guests', fn ($q) => $q->where('name_normalized', 'like', '%'.$term.'%'))
-            ->with('guests')
-            ->orderBy('label')
+        $guests = Guest::where('name_normalized', 'like', '%'.$term.'%')
+            ->orderBy('name')
             ->get();
 
-        $this->foundFamilyIds = $families->pluck('id')->all();
+        $this->foundGuestIds = $guests->pluck('id')->all();
 
-        if ($families->isEmpty()) {
+        if ($guests->isEmpty()) {
             $this->step = 'notfound';
 
             return;
         }
 
-        if ($families->count() === 1) {
-            $this->loadFamily($families->first()->id);
+        if ($guests->count() === 1) {
+            $this->loadGuest($guests->first()->id);
 
             return;
         }
@@ -87,54 +82,50 @@ new class extends Component
         $this->step = 'choose';
     }
 
-    public function choose(int $familyId): void
+    public function choose(int $guestId): void
     {
-        $this->loadFamily($familyId);
+        $this->loadGuest($guestId);
     }
 
-    protected function loadFamily(int $familyId): void
+    protected function loadGuest(int $guestId): void
     {
-        abort_unless(in_array($familyId, $this->foundFamilyIds, true), 403);
+        abort_unless(in_array($guestId, $this->foundGuestIds, true), 403);
 
-        $family = Family::with('guests')->findOrFail($familyId);
+        $guest = Guest::with('family')->findOrFail($guestId);
 
-        $this->familyId = $family->id;
-        $this->attendance = $family->guests->mapWithKeys(
-            fn (Guest $guest): array => [$guest->id => (bool) $guest->is_attending],
-        )->all();
-        $this->familyMessage = (string) $family->message;
+        $this->guestId = $guest->id;
+        $this->isAttending = (bool) $guest->is_attending;
+        $this->familyMessage = (string) $guest->family->message;
         $this->step = 'confirm';
 
-        unset($this->family);
+        unset($this->guest);
     }
 
     public function submit(): void
     {
         abort_unless($this->rsvpOpen(), 403);
-        abort_unless(in_array($this->familyId, $this->foundFamilyIds, true), 403);
+        abort_unless(in_array($this->guestId, $this->foundGuestIds, true), 403);
 
         $this->validateOnly('familyMessage');
 
-        $family = Family::with('guests')->findOrFail($this->familyId);
+        $guest = Guest::with('family')->findOrFail($this->guestId);
 
-        foreach ($family->guests as $guest) {
-            $guest->update([
-                'is_attending' => (bool) ($this->attendance[$guest->id] ?? false),
-                'responded_at' => now(),
-            ]);
-        }
+        $guest->update([
+            'is_attending' => $this->isAttending,
+            'responded_at' => now(),
+        ]);
 
-        $family->update(['message' => filled($this->familyMessage) ? $this->familyMessage : null]);
+        $guest->family->update(['message' => filled($this->familyMessage) ? $this->familyMessage : null]);
 
-        unset($this->family);
+        unset($this->guest);
         $this->step = 'done';
     }
 
     public function startOver(): void
     {
-        $this->reset('step', 'query', 'foundFamilyIds', 'familyId', 'attendance', 'familyMessage');
+        $this->reset('step', 'query', 'foundGuestIds', 'guestId', 'isAttending', 'familyMessage');
         $this->resetValidation();
-        unset($this->family, $this->matches);
+        unset($this->guest, $this->matches);
     }
 };
 ?>
@@ -158,16 +149,16 @@ new class extends Component
                     <flux:input
                         wire:model="query"
                         label="Seu nome"
-                        placeholder="Digite o nome de alguém da família"
+                        placeholder="Digite seu nome"
                         autofocus
                     />
                     <flux:button type="submit" variant="primary" class="w-full justify-center">Buscar</flux:button>
                 </form>
             @endif
 
-            {{-- ===================== ESCOLHA DE NÚCLEO ===================== --}}
+            {{-- ===================== ESCOLHA DE PESSOA ===================== --}}
             @if ($step === 'choose')
-                <flux:text>Encontramos mais de uma família. Qual é a sua?</flux:text>
+                <flux:text>Encontramos mais de uma pessoa com esse nome. Qual é você?</flux:text>
                 <div class="flex flex-col gap-2">
                     @foreach ($this->matches as $match)
                         <button
@@ -176,9 +167,9 @@ new class extends Component
                             wire:click="choose({{ $match->id }})"
                             class="rounded-lg border border-outline-variant/60 p-4 text-left transition-colors hover:border-primary hover:bg-primary/5"
                         >
-                            <span class="font-medium text-on-surface">{{ $match->label }}</span>
+                            <span class="font-medium text-on-surface">{{ $match->name }}</span>
                             <span class="mt-0.5 block text-sm text-on-surface-variant">
-                                {{ $match->guests->pluck('name')->join(', ') }}
+                                {{ $match->family->label }}
                             </span>
                         </button>
                     @endforeach
@@ -187,23 +178,18 @@ new class extends Component
             @endif
 
             {{-- ===================== CONFIRMAÇÃO ===================== --}}
-            @if ($step === 'confirm' && $this->family)
+            @if ($step === 'confirm' && $this->guest)
                 <flux:text>
-                    <span class="font-medium text-on-surface">{{ $this->family->label }}</span> —
-                    marque quem vai ao casamento.
+                    <span class="font-medium text-on-surface">{{ $this->guest->name }}</span> —
+                    confirme se você vai ao casamento.
                 </flux:text>
 
                 @if ($this->rsvpOpen)
                     <form wire:submit="submit" class="flex flex-col gap-4">
-                        <div class="flex flex-col gap-3">
-                            @foreach ($this->family->guests as $guest)
-                                <flux:checkbox
-                                    wire:key="guest-{{ $guest->id }}"
-                                    wire:model="attendance.{{ $guest->id }}"
-                                    label="{{ $guest->name }}"
-                                />
-                            @endforeach
-                        </div>
+                        <flux:checkbox
+                            wire:model="isAttending"
+                            label="Vou ao casamento"
+                        />
 
                         <flux:textarea
                             wire:model="familyMessage"
@@ -219,21 +205,19 @@ new class extends Component
                     </form>
                 @else
                     <div class="flex flex-col gap-2">
-                        @foreach ($this->family->guests as $guest)
-                            <div wire:key="ro-{{ $guest->id }}" class="flex items-center gap-2 text-sm">
-                                @if ($guest->is_attending)
-                                    <flux:icon.check class="size-4 text-primary" />
-                                @elseif ($guest->is_attending === false)
-                                    <flux:icon.x-mark class="size-4 text-error" />
-                                @else
-                                    <flux:icon.minus class="size-4 text-on-surface-variant" />
-                                @endif
-                                <span>{{ $guest->name }}</span>
-                            </div>
-                        @endforeach
-                        @if (filled($this->family->message))
+                        <div class="flex items-center gap-2 text-sm">
+                            @if ($this->guest->is_attending)
+                                <flux:icon.check class="size-4 text-primary" />
+                            @elseif ($this->guest->is_attending === false)
+                                <flux:icon.x-mark class="size-4 text-error" />
+                            @else
+                                <flux:icon.minus class="size-4 text-on-surface-variant" />
+                            @endif
+                            <span>{{ $this->guest->name }}</span>
+                        </div>
+                        @if (filled($this->guest->family->message))
                             <p class="mt-2 border-t border-outline-variant/40 pt-2 text-sm text-on-surface-variant">
-                                “{{ $this->family->message }}”
+                                “{{ $this->guest->family->message }}”
                             </p>
                         @endif
                     </div>
