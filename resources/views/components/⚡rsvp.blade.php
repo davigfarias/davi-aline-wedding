@@ -51,8 +51,11 @@ new class extends Component
     #[Computed]
     public function matches(): \Illuminate\Support\Collection
     {
+        $term = Guest::normalize($this->query);
+
         return Family::whereIn('id', $this->foundFamilyIds)
-            ->with('guests')
+            ->with(['guests' => fn ($q) => $q->where('name_normalized', 'like', '%'.$term.'%')])
+            ->orderBy('label')
             ->get();
     }
 

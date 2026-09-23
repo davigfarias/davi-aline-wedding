@@ -60,6 +60,24 @@ test('multiple matching families lead to a choice step', function () {
         ->assertSet('familyId', $a->id);
 });
 
+test('the choice step only shows the matching guest, not the whole family', function () {
+    $a = Family::factory()->create(['label' => 'Família Silva']);
+    $b = Family::factory()->create(['label' => 'Família Souza']);
+    Guest::factory()->for($a)->create(['name' => 'Marcelo Silva']);
+    Guest::factory()->for($a)->create(['name' => 'Ana Silva']);
+    Guest::factory()->for($b)->create(['name' => 'Marcelo Souza']);
+    Guest::factory()->for($b)->create(['name' => 'Bruno Souza']);
+
+    Livewire::test('rsvp')
+        ->set('query', 'marcelo')
+        ->call('search')
+        ->assertSet('step', 'choose')
+        ->assertSee('Marcelo Silva')
+        ->assertSee('Marcelo Souza')
+        ->assertDontSee('Ana Silva')
+        ->assertDontSee('Bruno Souza');
+});
+
 test('a family cannot be chosen unless it was in the search results', function () {
     $shown = Family::factory()->create();
     $hidden = Family::factory()->create();
