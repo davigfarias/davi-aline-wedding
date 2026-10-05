@@ -194,9 +194,9 @@ class extends Component
     </form>
 
     {{-- ===================== LISTA ===================== --}}
-    <div class="flex flex-col gap-4">
+    <div class="grid items-start gap-4 md:grid-cols-2">
         @forelse ($this->families as $family)
-            <div wire:key="family-{{ $family->id }}" class="rounded-xl border border-outline-variant/50 bg-surface p-5">
+            <div wire:key="family-{{ $family->id }}" @class(['rounded-xl border border-outline-variant/50 bg-surface p-5', 'md:col-span-2' => $editingId === $family->id])>
                 @if ($editingId === $family->id)
                     {{-- ---- edição inline ---- --}}
                     <form wire:submit="saveFamily" class="flex flex-col gap-4">
@@ -204,20 +204,22 @@ class extends Component
 
                         <div class="flex flex-col gap-2">
                             <flux:label>Pessoas</flux:label>
-                            @foreach ($editGuests as $key => $row)
-                                <div wire:key="edit-{{ $key }}" class="flex items-start gap-2">
-                                    <flux:input wire:model="editGuests.{{ $key }}.name" placeholder="Nome" class="flex-1" />
-                                    <flux:input wire:model="editGuests.{{ $key }}.phone" type="tel" placeholder="(61) 98407-6120" aria-label="Telefone" class="w-44" />
-                                    <flux:button
-                                        type="button"
-                                        variant="ghost"
-                                        icon="trash"
-                                        size="sm"
-                                        wire:click="removeGuestRow('{{ $key }}')"
-                                        aria-label="Remover pessoa"
-                                    />
-                                </div>
-                            @endforeach
+                            <div class="grid gap-2 md:grid-cols-2">
+                                @foreach ($editGuests as $key => $row)
+                                    <div wire:key="edit-{{ $key }}" class="flex items-start gap-2">
+                                        <flux:input wire:model="editGuests.{{ $key }}.name" placeholder="Nome" aria-label="Nome" class="min-w-0 flex-1" />
+                                        <flux:input wire:model="editGuests.{{ $key }}.phone" type="tel" placeholder="(61) 98407-6120" aria-label="Telefone" class="min-w-0 flex-1" />
+                                        <flux:button
+                                            type="button"
+                                            variant="ghost"
+                                            icon="trash"
+                                            size="sm"
+                                            wire:click="removeGuestRow('{{ $key }}')"
+                                            aria-label="Remover pessoa"
+                                        />
+                                    </div>
+                                @endforeach
+                            </div>
                             @error('editGuests')
                                 <flux:text class="text-error">{{ $message }}</flux:text>
                             @enderror
@@ -290,7 +292,7 @@ class extends Component
                 </flux:modal>
             </div>
         @empty
-            <p class="rounded-xl border border-dashed border-outline-variant bg-surface-container-low p-8 text-center text-on-surface-variant">
+            <p class="rounded-xl border border-dashed md:col-span-2 border-outline-variant bg-surface-container-low p-8 text-center text-on-surface-variant">
                 Nenhuma família cadastrada. Adicione a primeira acima.
             </p>
         @endforelse
