@@ -1,0 +1,453 @@
+/* ===========================================================================
+   Convite de casamento — Davi & Aline
+   Paleta, tipografia e ornamentos extraídos do convite impresso (Canva/A4).
+   Mobile-first; tipografia fluida com clamp(); sem framework.
+   =========================================================================== */
+
+/* ---------------------------------------------------------------- tokens -- */
+:root {
+  /* Cores — todas tiradas do PDF original */
+  --verde-nome:    #0b3c24;  /* "Davi & Aline" e o verde institucional */
+  --verde-suave:   #3e6250;  /* o "20" da data */
+  --salvia:        #a0b18e;  /* fundo da versão verde do verso impresso */
+  --creme:         #f4f1e6;  /* texto sobre o verde */
+  --papel:         #ffffff;
+  --casca:         #f7f8f4;  /* fundo das faixas claras */
+  --tinta:         #141413;
+  --tinta-suave:   #4a4a45;
+  --linha:         rgba(11, 60, 36, .14);
+  --linha-forte:   rgba(11, 60, 36, .35);
+
+  /* Tipografia */
+  --fonte-corpo:    "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --fonte-versal:   "Cormorant SC", "Cormorant Garamond", Georgia, serif;
+  --fonte-titulo:   "Simonetta", Georgia, serif;
+  --fonte-nomes:    "Symphony Pro", "Cormorant Garamond", Georgia, serif;
+  --fonte-e:        "Anastasia Script", "Cormorant Garamond", cursive;
+
+  /* Escala fluida: o primeiro valor vale em 360px, o último em 1440px */
+  --t-corpo:    clamp(1rem,    .92rem + .40vw, 1.1875rem);
+  --t-chamada:  clamp(1.05rem, .95rem + .50vw, 1.3125rem);
+  --t-titulo:   clamp(1.5rem,  1.15rem + 1.6vw, 2.375rem);
+  --t-cartao:   clamp(1.3rem,  1.10rem + .90vw, 1.6875rem);
+  --t-nomes:    clamp(3.5rem,  1.60rem + 8.6vw, 7rem);
+  --t-dia:      clamp(3.75rem, 2.60rem + 5.2vw, 6rem);
+  --t-versal:   clamp(.66rem,  .60rem + .25vw, .78rem);
+
+  /* Ritmo vertical */
+  --faixa-y:   clamp(3.5rem, 2rem + 6vw, 6.5rem);
+  --gutter:    clamp(1.25rem, .5rem + 3.5vw, 3rem);
+  --miolo-max: 72rem;
+}
+
+/* Fontes do convite impresso (subconjuntos: só os glifos de Davi, Aline e &) */
+@font-face {
+  font-family: "Symphony Pro";
+  src: url("../fonts/symphony-pro-subset.woff2") format("woff2"),
+       url("../fonts/symphony-pro-subset.woff")  format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Anastasia Script";
+  src: url("../fonts/anastasia-script-subset.woff2") format("woff2"),
+       url("../fonts/anastasia-script-subset.woff")  format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------------ base -- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--casca);
+  color: var(--tinta);
+  font-family: var(--fonte-corpo);
+  font-size: var(--t-corpo);
+  line-height: 1.65;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+p { margin: 0; }
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--verde-nome);
+  color: var(--creme);
+  padding: .75rem 1.25rem;
+  z-index: 10;
+}
+.skip-link:focus { left: 0; }
+
+:where(a, .botao):focus-visible {
+  outline: 2px solid var(--verde-nome);
+  outline-offset: 3px;
+}
+
+.miolo {
+  position: relative;
+  max-width: var(--miolo-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, .6rem + 1.4vw, 1.6rem);
+  text-align: center;
+}
+
+/* ------------------------------------------------------------ ornamentos -- */
+.ornamento {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .875rem;
+  color: var(--verde-suave);
+}
+.ornamento__fio {
+  display: block;
+  width: clamp(2.5rem, 1.5rem + 3vw, 4.375rem);
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+}
+.ornamento__losango { width: 8px; height: 8px; flex: none; }
+.ornamento--mini { gap: .55rem; }
+.ornamento--mini .ornamento__fio { width: 1.75rem; }
+
+/* ---------------------------------------------------------------- nomes --- */
+.nomes {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: nowrap;
+  font-weight: 400;
+  color: var(--verde-nome);
+  white-space: nowrap;
+}
+.nomes__nome {
+  font-family: var(--fonte-nomes);
+  font-size: var(--t-nomes);
+  line-height: 1.02;
+}
+.nomes__e {
+  font-family: var(--fonte-e);
+  font-size: calc(var(--t-nomes) * .835);
+  line-height: .88;
+  margin-inline: .17em .45em;
+  position: relative;
+  top: -.09em;
+}
+.nomes--pequeno { --t-nomes: clamp(1.9rem, 1.4rem + 2.2vw, 3.25rem); }
+
+.monograma {
+  width: clamp(5.5rem, 4rem + 5vw, 8rem);
+  height: auto;
+}
+.monograma--pequeno { width: clamp(3.25rem, 2.6rem + 2vw, 4.875rem); }
+
+/* --------------------------------------------------------------- botões --- */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;                      /* alvo de toque confortável */
+  padding: .9rem 1.75rem;
+  border: 1px solid var(--linha-forte);
+  background: transparent;
+  color: var(--verde-nome);
+  font-family: var(--fonte-versal);
+  font-size: clamp(.8rem, .74rem + .25vw, .97rem);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+.botao:hover { background: var(--verde-nome); border-color: var(--verde-nome); color: var(--creme); }
+
+.botao--solido { background: var(--verde-nome); border-color: var(--verde-nome); color: var(--creme); }
+.botao--solido:hover { background: #082d1b; border-color: #082d1b; }
+
+.botao--mini { padding: .7rem 1.35rem; font-size: .82rem; margin-top: auto; }
+
+/* ============================================================== 1. capa === */
+.hero {
+  position: relative;
+  background: var(--papel);
+  padding-block: clamp(4rem, 2rem + 9vw, 7rem);
+  overflow: hidden;
+  min-height: min(100svh, 56rem);
+  display: grid;
+  place-items: center;
+}
+
+.hero__folhagem { position: absolute; inset: 0; pointer-events: none; }
+.hero__folha {
+  position: absolute;
+  width: clamp(14rem, 8rem + 26vw, 29.75rem);
+  height: auto;
+}
+.hero__folha--se { top: -1.5rem; left: -2.5rem; }
+.hero__folha--sd { top: -1.5rem; right: -2.5rem; }
+.hero__folha--ie { bottom: -1.5rem; left: -2.5rem; }
+.hero__folha--id { bottom: -1.5rem; right: -2.5rem; }
+
+.hero__conteudo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.25rem, .6rem + 2.2vw, 1.9rem);
+  text-align: center;
+  padding-inline: var(--gutter);
+  max-width: 64rem;              /* largura suficiente para os 3 botões em linha */
+}
+
+.hero__bencao  { font-size: var(--t-chamada); max-width: 34rem; }
+.hero__chamada { font-size: var(--t-chamada); max-width: 38rem; }
+
+/* Bloco de data ----------------------------------------------------------- */
+.data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, .4rem + 2vw, 1.875rem);
+  color: var(--tinta);
+}
+.data__moldura {
+  display: flex;
+  flex-direction: column;
+  width: clamp(6rem, 3.5rem + 9vw, 11rem);
+}
+.data__fio { display: block; width: 100%; height: 5px; }
+.data__rotulo {
+  padding-block: .45rem;
+  text-align: center;
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.05rem, .75rem + 1.2vw, 1.6875rem);
+  line-height: 1;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.data__dia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .375rem;
+  font-family: var(--fonte-titulo);
+  font-size: var(--t-dia);
+  line-height: .95;
+  color: var(--verde-suave);
+}
+.data__hora {
+  font-family: var(--fonte-versal);
+  font-size: var(--t-versal);
+  line-height: 1.2;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--tinta);
+  white-space: nowrap;
+}
+
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: .5rem;
+}
+.acoes .botao { padding-inline: clamp(1.1rem, .4rem + 1.6vw, 1.75rem); }
+
+/* Abaixo de 640px a data empilha: dia em cima, mês e ano lado a lado */
+@media (max-width: 40rem) {
+  .data { flex-wrap: wrap; }
+  .data__dia { order: -1; flex-basis: 100%; }
+  .acoes { flex-direction: column; align-items: stretch; width: 100%; max-width: 20rem; }
+}
+
+/* ========================================================= 2. versículo === */
+.versiculo {
+  background: var(--verde-nome);
+  color: var(--creme);
+  padding-block: var(--faixa-y);
+}
+.versiculo .ornamento { color: var(--creme); }
+.versiculo__texto { margin: 0; max-width: 55rem; }
+.versiculo__texto p {
+  font-family: var(--fonte-versal);
+  font-size: clamp(1.15rem, .95rem + 1vw, 1.75rem);
+  line-height: 1.62;
+  letter-spacing: .012em;
+}
+.versiculo__ref {
+  display: block;
+  margin-top: 1.4rem;
+  font-family: var(--fonte-versal);
+  font-size: var(--t-versal);
+  font-style: normal;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  opacity: .8;
+}
+
+/* ======================================================= 3. informações === */
+.informacoes {
+  position: relative;
+  background: var(--papel);
+  padding-block: var(--faixa-y);
+  overflow: hidden;
+}
+.informacoes__fundo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: max(115%, 60rem);
+  max-width: none;
+  opacity: .2;
+  pointer-events: none;
+}
+
+.secao__titulo {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+  font-size: var(--t-titulo);
+  line-height: 1.18;
+}
+
+.cartoes {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17.5rem, 1fr));
+  gap: clamp(1rem, .5rem + 1.6vw, 1.625rem);
+}
+.cartao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.125rem;
+  padding: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem) 2.125rem;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  color: var(--tinta-suave);
+}
+.cartao__titulo {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+  font-size: var(--t-cartao);
+  line-height: 1.2;
+  color: var(--tinta);
+  text-transform: uppercase;
+}
+
+/* ============================================================== 4. RSVP === */
+.rsvp {
+  background: var(--salvia);
+  padding-block: var(--faixa-y);
+}
+.rsvp .miolo { gap: 1.375rem; }
+.rsvp__chamada { font-size: var(--t-chamada); max-width: 34ch; }
+.rsvp__telefone {
+  font-weight: 600;
+  font-size: clamp(1.75rem, 1.2rem + 2.4vw, 2.5rem);
+  line-height: 1.2;
+  color: var(--verde-nome);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(11, 60, 36, .4);
+  padding-bottom: .25rem;
+}
+.rsvp__telefone:hover { border-bottom-color: var(--verde-nome); }
+
+/* ================================================================ 5. QR === */
+.qr {
+  background: var(--casca);
+  padding-block: var(--faixa-y);
+}
+.qr .miolo { gap: 1.625rem; }
+.qr__chamada { max-width: 46ch; color: var(--tinta-suave); }
+.qr__moldura {
+  display: block;
+  padding: 1.25rem;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+}
+.qr__moldura img { width: 150px; height: 150px; }
+.qr__link {
+  font-style: italic;
+  font-size: clamp(1.05rem, .95rem + .5vw, 1.375rem);
+  color: var(--verde-nome);
+}
+
+/* ============================================================ 6. rodapé === */
+.rodape {
+  position: relative;
+  background: var(--papel);
+  padding: clamp(3rem, 2rem + 3vw, 5.5rem) var(--gutter) clamp(7rem, 5rem + 6vw, 12.875rem);
+  overflow: hidden;
+  text-align: center;
+}
+.rodape__guirlanda {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  translate: -50% 0;
+  width: clamp(22rem, 18rem + 26vw, 55rem);
+  max-width: none;
+  pointer-events: none;
+}
+.rodape__conteudo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .875rem;
+}
+.rodape__data {
+  font-family: var(--fonte-versal);
+  font-size: var(--t-versal);
+  letter-spacing: .3em;
+  color: var(--tinta-suave);
+}
+
+/* ====================================================== revelar ao rolar == */
+[data-revelar] {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition: opacity .7s ease, transform .7s ease;
+}
+[data-revelar].is-visivel { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  [data-revelar] { opacity: 1; transform: none; }
+}
+
+/* ========================================================== impressão ===== */
+@media print {
+  .acoes, .botao, .skip-link { display: none; }
+  body { background: #fff; }
+  .versiculo { background: #fff; color: var(--tinta); }
+  .versiculo .ornamento { color: var(--verde-suave); }
+  .rsvp { background: #fff; }
+  [data-revelar] { opacity: 1; transform: none; }
+  section { break-inside: avoid; }
+}

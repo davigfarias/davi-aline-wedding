@@ -150,6 +150,7 @@
                             <h3 class="font-display text-xl text-on-surface">Recepção</h3>
                             {{-- TODO: local e horário reais --}}
                             <p class="mt-2 text-on-surface-variant">Restaurante Mangai - Lago Sul</p>
+                            <p class="mt-2 text-sm text-on-surface-variant">O buffet será por adesão, no valor de R$106,90 o kilo.</p>
                             <p class="mt-4 w-full border-t border-outline-variant/30 pt-4 text-xs uppercase tracking-widest text-primary">19:30</p>
                         </div>
                     </div>

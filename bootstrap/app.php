@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureAdminPin;
+use App\Http\Middleware\EnsureConviteAccess;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin.pin' => EnsureAdminPin::class,
+            'convite.acesso' => EnsureConviteAccess::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

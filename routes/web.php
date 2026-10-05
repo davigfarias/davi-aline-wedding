@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
 
+Route::view('/convite', 'convite')->middleware('convite.acesso')->name('convite');
+
 Route::livewire('/entrar', 'pages::pin-login')->name('entrar');
 Route::get('/sair', LogoutController::class)->name('painel.sair');
 

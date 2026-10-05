@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Family;
+use App\Models\Guest;
 use Flux\Flux;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
@@ -19,7 +20,7 @@ class extends Component
 
     public string $editLabel = '';
 
-    /** @var array<string, array{id: int|null, name: string}> */
+    /** @var array<string, array{id: int|null, name: string, phone: string}> */
     public array $editGuests = [];
 
     /**
@@ -79,14 +80,14 @@ class extends Component
         $this->editLabel = $family->label;
         $this->editGuests = $family->guests
             ->mapWithKeys(fn ($guest): array => [
-                (string) $guest->id => ['id' => $guest->id, 'name' => $guest->name],
+                (string) $guest->id => ['id' => $guest->id, 'name' => $guest->name, 'phone' => (string) $guest->phone],
             ])
             ->all();
     }
 
     public function addGuestRow(): void
     {
-        $this->editGuests[Str::random(8)] = ['id' => null, 'name' => ''];
+        $this->editGuests[Str::random(8)] = ['id' => null, 'name' => '', 'phone' => ''];
     }
 
     public function removeGuestRow(string $key): void
@@ -101,6 +102,9 @@ class extends Component
         $this->validate([
             'editLabel' => ['required', 'string', 'max:255'],
             'editGuests.*.name' => ['nullable', 'string', 'max:255'],
+            'editGuests.*.phone' => ['nullable', 'string', 'regex:/^(?:\D*\d){10,13}\D*$/'],
+        ], [
+            'editGuests.*.phone.regex' => 'Telefone inválido. Use DDD + número, ex.: (61) 98407-6120.',
         ]);
 
         $family = Family::with('guests')->findOrFail($this->editingId);
@@ -121,13 +125,12 @@ class extends Component
         $family->guests()->whereNotIn('id', $keptIds)->delete();
 
         foreach ($rows as $row) {
+            $attributes = ['name' => $row['name'], 'phone' => $row['phone']];
+
             if ($row['id']) {
-                $family->guests()->whereKey($row['id'])->update([
-                    'name' => $row['name'],
-                    'name_normalized' => \App\Models\Guest::normalize($row['name']),
-                ]);
+                $family->guests->find($row['id'])?->update($attributes);
             } else {
-                $family->guests()->create(['name' => $row['name']]);
+                $family->guests()->create($attributes);
             }
         }
 
@@ -141,6 +144,13 @@ class extends Component
     {
         $this->reset('editingId', 'editLabel', 'editGuests');
         $this->resetValidation();
+    }
+
+    public function markInviteSent(int $guestId): void
+    {
+        Guest::findOrFail($guestId)->update(['invite_sent_at' => now()]);
+
+        unset($this->families);
     }
 
     public function deleteFamily(int $familyId): void
@@ -195,8 +205,9 @@ class extends Component
                         <div class="flex flex-col gap-2">
                             <flux:label>Pessoas</flux:label>
                             @foreach ($editGuests as $key => $row)
-                                <div wire:key="edit-{{ $key }}" class="flex items-center gap-2">
-                                    <flux:input wire:model="editGuests.{{ $key }}.name" class="flex-1" />
+                                <div wire:key="edit-{{ $key }}" class="flex items-start gap-2">
+                                    <flux:input wire:model="editGuests.{{ $key }}.name" placeholder="Nome" class="flex-1" />
+                                    <flux:input wire:model="editGuests.{{ $key }}.phone" type="tel" placeholder="(61) 98407-6120" aria-label="Telefone" class="w-44" />
                                     <flux:button
                                         type="button"
                                         variant="ghost"
@@ -225,9 +236,28 @@ class extends Component
                     <div class="flex items-start justify-between gap-3">
                         <div>
                             <h2 class="font-medium text-on-surface">{{ $family->label }}</h2>
-                            <p class="mt-1 text-sm text-on-surface-variant">
-                                {{ $family->guests->pluck('name')->join(', ') }}
-                            </p>
+                            <ul class="mt-2 flex flex-col gap-1">
+                                @foreach ($family->guests as $guest)
+                                    <li wire:key="guest-{{ $guest->id }}" class="flex flex-wrap items-center gap-2 text-sm text-on-surface-variant">
+                                        {{ $guest->name }}
+                                        @if ($guest->phone)
+                                            <flux:button
+                                                size="xs"
+                                                variant="ghost"
+                                                icon="paper-airplane"
+                                                href="{{ $guest->whatsappInviteUrl() }}"
+                                                target="_blank"
+                                                wire:click="markInviteSent({{ $guest->id }})"
+                                            >
+                                                {{ $guest->invite_sent_at ? 'Reenviar convite' : 'Enviar convite' }}
+                                            </flux:button>
+                                        @endif
+                                        @if ($guest->invite_sent_at)
+                                            <span class="text-xs text-primary">enviado em {{ $guest->invite_sent_at->format('d/m H:i') }}</span>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
                         <div class="flex shrink-0 gap-1">
                             <flux:button size="sm" variant="ghost" icon="pencil" wire:click="startEdit({{ $family->id }})" aria-label="Editar" />

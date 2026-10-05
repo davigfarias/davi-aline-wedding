@@ -100,3 +100,44 @@ test('the guest list page renders for an authenticated visitor', function () {
         ->assertOk()
         ->assertSee('Família Visível');
 });
+
+test('editing a family saves each guest phone and rejects an invalid one', function () {
+    $family = Family::factory()->create();
+    $guest = Guest::factory()->for($family)->create();
+
+    $component = Livewire::test('pages::painel.guests')
+        ->call('startEdit', $family->id)
+        ->set("editGuests.{$guest->id}.phone", '123')
+        ->call('saveFamily')
+        ->assertHasErrors("editGuests.{$guest->id}.phone");
+
+    $component->set("editGuests.{$guest->id}.phone", '(61) 98407-6120')
+        ->call('saveFamily')
+        ->assertHasNoErrors();
+
+    expect($guest->fresh()->phone)->toBe('5561984076120');
+});
+
+test('only guests with a phone get the send-invite button', function () {
+    $family = Family::factory()->create();
+    Guest::factory()->for($family)->create(['phone' => '61984076120']);
+    Guest::factory()->for($family)->create(['phone' => null]);
+
+    $html = Livewire::test('pages::painel.guests')->html();
+
+    expect(substr_count($html, 'Enviar convite'))->toBe(1)
+        ->and($html)->toContain('https://wa.me/5561984076120');
+});
+
+test('sending the invite records when it was sent and offers a resend', function () {
+    $this->freezeSecond();
+    $guest = Guest::factory()->create(['phone' => '61984076120']);
+
+    Livewire::test('pages::painel.guests')
+        ->assertSee('Enviar convite')
+        ->call('markInviteSent', $guest->id)
+        ->assertSee('Reenviar convite')
+        ->assertSee('enviado em '.now()->format('d/m H:i'));
+
+    expect($guest->fresh()->invite_sent_at->equalTo(now()))->toBeTrue();
+});
