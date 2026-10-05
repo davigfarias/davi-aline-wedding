@@ -222,15 +222,21 @@
                         Sua presença é o nosso maior presente. Mas, se deseja nos presentear, preparamos
                         uma lista com muito carinho para facilitar a escolha.
                     </p>
-                    {{-- TODO: colocar o link da lista de presentes no href --}}
-                    <a
-                        href="https://lista.havan.com.br/Convidado/ItensListaPresente/957800"
-                        target="_blank"
-                        rel="noopener"
-                        class="mt-8 rounded bg-primary px-8 py-3.5 text-xs font-medium uppercase tracking-widest text-on-primary shadow-sm transition-colors hover:bg-primary-container hover:text-white"
-                    >
-                        Ver Lista de Presentes
-                    </a>
+                    <div class="mt-8 grid w-full grid-cols-2 gap-4 sm:gap-6">
+                        @foreach ([
+                            ['nome' => 'Havan', 'logo' => 'img/havan.png', 'url' => 'https://lista.havan.com.br/Convidado/ItensListaPresente/957800'],
+                            ['nome' => 'Amazon', 'logo' => 'img/amazon.png', 'url' => 'https://www.amazon.com.br/hz/wishlist/ls/2YIREQKX7BCW8?ref_=wl_share'],
+                        ] as $loja)
+                            <a
+                                href="{{ $loja['url'] }}"
+                                target="_blank"
+                                rel="noopener"
+                                class="flex h-12 items-center justify-center transition hover:opacity-75 sm:h-16"
+                            >
+                                <img src="{{ asset($loja['logo']) }}" alt="Lista de presentes na {{ $loja['nome'] }}" class="max-h-full max-w-full object-contain" loading="lazy" />
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
             </section>
         </main>
